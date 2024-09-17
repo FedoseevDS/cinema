@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Main from './pages/main/main';
-import { Layout } from 'antd';
+
+import Main from './pages/main';
 
 import './styles/global.scss';
 
@@ -13,11 +13,7 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  return (
-    <Layout>
-      <RouterProvider router={router} />
-    </Layout>
-  );
+  return <RouterProvider router={router} />;
 };
 
 export default App;

@@ -1,0 +1,32 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content {
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding-top: 50px;
+  width: 100%;
+}
+
+.controlPanel {
+  box-sizing: border-box;
+  width: 1320px;
+  height: 248px;
+  padding: 33px 28px;
+  box-shadow: 0px 12px 24px 0px #272D4D33;
+  box-shadow: 0px 1px 2px 0px #1E1E2033;
+}
+
+.filters {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 30px;
+}
