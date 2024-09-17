@@ -9,7 +9,7 @@ export const requestsApi = createApi({
       query: () => ({
         headers: { 'X-API-KEY': TOKEN },
         method: 'get',
-        params: { limit: 250 },
+        params: { limit: 20 },
         url: '/movie',
       }),
     }),

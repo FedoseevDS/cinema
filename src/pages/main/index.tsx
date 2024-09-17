@@ -5,13 +5,30 @@ import { Content } from 'antd/es/layout/layout';
 import Header from '../../components/header';
 import Search from '../../components/search';
 import Select from '../../components/select';
+import Cards from '../../components/cards/cards';
 
 import { useGetDataQuery } from '../../store/requests';
 
 import styles from './styles.module.scss';
 
+interface MapItem {
+  name: string;
+  poster: { previewUrl: string };
+  id: number;
+}
+
 const Main: React.FC = () => {
-  const { data } = useGetDataQuery(null);
+  const { data } = useGetDataQuery('');
+
+  const showCards = () => {
+    return data?.docs.map((i: MapItem) => {
+      return (
+        <React.Fragment key={i.id}>
+          <Cards name={i.name} poster={i.poster} />
+        </React.Fragment>
+      );
+    });
+  };
 
   return (
     <Layout className={styles.wrapper}>
@@ -29,7 +46,7 @@ const Main: React.FC = () => {
           </div>
         </div>
         <div>Найдено {data?.docs.length} результатов</div>
-        <div>Карточки</div>
+        <div className={styles.cards}>{showCards()}</div>
       </Content>
     </Layout>
   );

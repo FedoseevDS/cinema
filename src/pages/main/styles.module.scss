@@ -30,3 +30,10 @@
   justify-content: space-between;
   gap: 30px;
 }
+
+.cards {
+  width: 1320px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}

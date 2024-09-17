@@ -14,8 +14,8 @@ const Select: React.FC<SelectProps> = ({ label, placeholder }) => {
     <div className={styles.wrapper}>
       <label>{label}</label>
       <div>
-        <select>
-          <option disabled selected hidden>
+        <select defaultValue={''}>
+          <option disabled selected hidden value="">
             {placeholder}
           </option>
         </select>
