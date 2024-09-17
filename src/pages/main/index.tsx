@@ -6,9 +6,13 @@ import Header from '../../components/header';
 import Search from '../../components/search';
 import Select from '../../components/select';
 
+import { useGetDataQuery } from '../../store/requests';
+
 import styles from './styles.module.scss';
 
 const Main: React.FC = () => {
+  const { data } = useGetDataQuery(null);
+
   return (
     <Layout className={styles.wrapper}>
       <Header />
@@ -24,7 +28,7 @@ const Main: React.FC = () => {
             <Select label="фильтр 4" placeholder="Поиск..." />
           </div>
         </div>
-        <div>Найдено 0 результатов</div>
+        <div>Найдено {data?.docs.length} результатов</div>
         <div>Карточки</div>
       </Content>
     </Layout>

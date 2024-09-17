@@ -9,7 +9,7 @@ export default tseslint.config(
   { ignores: ['dist', 'nodu_modules'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended, prettierRecommended],
-    files: ['src/**/*.{js,jsx,ts,tsx}'],
+    files: ['src/**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
