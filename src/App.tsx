@@ -2,12 +2,12 @@ import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
-import MainLayout from './layouts';
+import MainLayout from 'layouts';
 
-import Main from './pages/main';
-import Detail from './pages/detail';
+import Main from 'pages/main';
+import Detail from 'pages/detail';
 
-import store from './store';
+import store from 'store';
 
 import './styles/global.scss';
 

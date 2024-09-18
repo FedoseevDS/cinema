@@ -1,14 +1,14 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Content } from 'antd/es/layout/layout';
 
-import Search from '../../components/search';
-import Select from '../../components/select';
-import Cards from '../../components/cards/cards';
+import Search from 'components/search';
+import Select from 'components/select';
+import Cards from 'components/cards';
 
-import { useGetDataQuery, useGetSearchQuery } from '../../store/requests';
+import { useGetDataQuery, useGetSearchQuery } from 'store/requests';
 
-import styles from './styles.module.scss';
 import { countriesConfig, genresConfig, ratingsConfig, yearsConfig } from './const';
+import styles from './styles.module.scss';
 
 interface MapItem {
   name: string;
@@ -33,8 +33,6 @@ const Main: React.FC = () => {
 
     return data?.docs;
   }, [data, filterData]);
-
-  console.log(filteredData);
 
   const showCards = useMemo(() => {
     return filteredData?.map((i: MapItem) => {

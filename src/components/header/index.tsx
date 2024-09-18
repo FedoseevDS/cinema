@@ -1,7 +1,7 @@
 import React from 'react';
 import { Header as LayoutHeader } from 'antd/es/layout/layout';
 
-import girlImg from '../../assets/girl.png';
+import girlImg from 'assets/girl.png';
 
 import styles from './styles.module.scss';
 

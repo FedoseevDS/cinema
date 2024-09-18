@@ -1,6 +1,6 @@
 import React from 'react';
 
-import searchImg from '../../assets/search.png';
+import searchImg from 'assets/search.png';
 
 import styles from './styles.module.scss';
 

@@ -1,5 +1,7 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { resolve } from 'path';
+
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -9,6 +11,15 @@ export default defineConfig({
     port: 5004,
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx']
-  }
-})
+    extensions: ['.scss', '.js', '.jsx', '.ts', '.tsx'],
+    alias: {
+      assets: resolve(__dirname, './src/assets'),
+      components: resolve(__dirname, './src/components'),
+      layouts: resolve(__dirname, './src/layouts'),
+      pages: resolve(__dirname, './src/pages'),
+      routers: resolve(__dirname, './src/routers'),
+      store: resolve(__dirname, './src/store'),
+      '~styles': resolve(__dirname, './src/styles/'),
+    },
+  },
+});

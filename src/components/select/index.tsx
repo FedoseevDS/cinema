@@ -1,6 +1,6 @@
 import React from 'react';
 
-import selectImg from '../../assets/select.png';
+import selectImg from 'assets/select.png';
 
 import styles from './styles.module.scss';
 
