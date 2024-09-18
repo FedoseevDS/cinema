@@ -13,6 +13,13 @@ export const requestsApi = createApi({
         url: '/movie',
       }),
     }),
+    getItem: builder.query({
+      query: ({ id }) => ({
+        headers: { 'X-API-KEY': TOKEN },
+        method: 'get',
+        url: `/movie/${id}`,
+      }),
+    }),
   }),
   reducerPath: 'requestsApi',
 });
