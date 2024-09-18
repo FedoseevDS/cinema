@@ -20,7 +20,7 @@ const Detail: React.FC = () => {
     <div className={styles.wrapper}>
       <div>
         <div className={styles.poster}>
-          <img src={data?.poster?.previewUrl || emptyImg} />
+          <img src={data?.poster?.previewUrl || emptyImg} alt="постер" />
         </div>
         <div className={styles.content}>
           <span>{data?.name}</span>

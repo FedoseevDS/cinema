@@ -19,7 +19,7 @@ const Select: React.FC<SelectProps> = ({ label, placeholder }) => {
             {placeholder}
           </option>
         </select>
-        <img src={selectImg} />
+        <img src={selectImg} alt="иконка селекта" />
       </div>
     </div>
   );
