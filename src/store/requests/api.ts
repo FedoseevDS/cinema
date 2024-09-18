@@ -6,10 +6,10 @@ export const requestsApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: 'https://api.kinopoisk.dev/v1.4/' }),
   endpoints: (builder) => ({
     getData: builder.query({
-      query: () => ({
+      query: ({ limit }) => ({
         headers: { 'X-API-KEY': TOKEN },
         method: 'get',
-        params: { limit: 20 },
+        params: { limit },
         url: '/movie',
       }),
     }),
@@ -18,6 +18,17 @@ export const requestsApi = createApi({
         headers: { 'X-API-KEY': TOKEN },
         method: 'get',
         url: `/movie/${id}`,
+      }),
+    }),
+    getSearch: builder.query({
+      query: ({ value, limit }) => ({
+        headers: { 'X-API-KEY': TOKEN },
+        method: 'get',
+        params: {
+          limit,
+          query: value,
+        },
+        url: '/movie/search',
       }),
     }),
   }),

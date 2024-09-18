@@ -4,12 +4,17 @@ import searchImg from '../../assets/search.png';
 
 import styles from './styles.module.scss';
 
-const Search: React.FC = () => {
+type SearchProps = {
+  // eslint-disable-next-line no-unused-vars
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
+const Search: React.FC<SearchProps> = ({ onChange }) => {
   return (
     <div className={styles.wrapper}>
-      <input placeholder="Поиск..." type="text" />
+      <input placeholder="Поиск..." type="text" onChange={onChange} />
       <button>
-        <img src={searchImg} />
+        <img src={searchImg} alt="значек поиска" />
       </button>
     </div>
   );

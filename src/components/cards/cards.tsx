@@ -20,7 +20,7 @@ const Cards: React.FC<CardsProps> = ({ name, poster, id }) => {
         <span>{name || 'Нет данных'}</span>
       </div>
       <div className={styles.picture}>
-        <img src={poster?.previewUrl || emptyImg}></img>
+        <img src={poster?.previewUrl || emptyImg} alt="постер"></img>
       </div>
     </Link>
   );
