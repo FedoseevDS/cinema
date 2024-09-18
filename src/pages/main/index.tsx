@@ -8,6 +8,7 @@ import Cards from '../../components/cards/cards';
 import { useGetDataQuery, useGetSearchQuery } from '../../store/requests';
 
 import styles from './styles.module.scss';
+import { countriesConfig, genresConfig, ratingsConfig, yearsConfig } from './const';
 
 interface MapItem {
   name: string;
@@ -33,6 +34,8 @@ const Main: React.FC = () => {
     return data?.docs;
   }, [data, filterData]);
 
+  console.log(filteredData);
+
   const showCards = useMemo(() => {
     return filteredData?.map((i: MapItem) => {
       return (
@@ -53,21 +56,50 @@ const Main: React.FC = () => {
     setShowMore((e) => e + 20);
   }, []);
 
+  // const [genres, setGenres] = useState([]);
+  // const [countries, setCountries] = useState([]);
+  // const [years, setYears] = useState([]);
+  // const [ratings, setRatings] = useState([]);
+
   return (
     <Content className={styles.content}>
       <div className={styles.controlPanel}>
         <Search onChange={handleChange} />
         <div className={styles.filters}>
-          <Select label="Длинное название" placeholder="Все" />
-          <Select label="фильтр 2" placeholder="Текст 1" />
+          <Select
+            label="Жанр"
+            placeholder="Выберите жанр"
+            options={genresConfig}
+            // onChange={setGenres}
+          />
+          <Select
+            label="Страна"
+            placeholder="Выберите страну"
+            options={countriesConfig}
+            // onChange={setCountries}
+          />
         </div>
         <div className={styles.filters}>
-          <Select label="фильтр 3" placeholder="Поиск..." />
-          <Select label="фильтр 4" placeholder="Поиск..." />
+          <Select
+            label="Год"
+            placeholder="Выберите год"
+            options={yearsConfig}
+            // onChange={setYears}
+          />
+          <Select
+            label="Рейтинг"
+            placeholder="Выберите рейтинг"
+            options={ratingsConfig}
+            // onChange={setRatings}
+          />
         </div>
       </div>
-      <div>Найдено {filterData?.docs.length || data?.docs.length} результатов</div>
-      <div className={styles.cards}>{showCards}</div>
+      <div>Найдено {filteredData?.length} результатов</div>
+      {filteredData?.length ? (
+        <div className={styles.cards}>{showCards}</div>
+      ) : (
+        <div>Нет данных</div>
+      )}
       <button className={styles.showMore} onClick={handleButton}>
         Показать еще
       </button>
