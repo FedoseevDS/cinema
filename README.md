@@ -1,6 +1,7 @@
 Тестовое задание, создание онлайн кинотеатра
 
-Стек: TS, react, react-router-dom, react-redux, @types/react-redux, @reduxjs/toolkit, vita, scss, antd
+Стек: TS, react, react-router-dom, react-redux, @types/react-redux, @reduxjs/toolkit, vita, scss, antd,  
+ normalize-css
 
 Описание веток:
 
