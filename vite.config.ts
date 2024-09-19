@@ -17,9 +17,7 @@ export default defineConfig({
       components: resolve(__dirname, './src/components'),
       layouts: resolve(__dirname, './src/layouts'),
       pages: resolve(__dirname, './src/pages'),
-      routers: resolve(__dirname, './src/routers'),
       store: resolve(__dirname, './src/store'),
-      '~styles': resolve(__dirname, './src/styles/'),
     },
   },
 });

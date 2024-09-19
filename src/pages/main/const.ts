@@ -57,8 +57,9 @@ export const yearsConfig = [
 ];
 
 export const ratingsConfig = [
-  { name: 'Кинопоиск', value: '7-10' },
-  { name: 'IMDB', value: '7-10' },
-  { name: 'TMDB', value: '7-10' },
-  { name: 'MPAA', value: '7-10' },
+  { name: '1-3', value: '1-3' },
+  { name: '4-6', value: '4-6' },
+  { name: '7-8', value: '7-8' },
+  { name: '8-9', value: '8-9' },
+  { name: '9-10', value: '9-10' },
 ];
