@@ -1,25 +1,22 @@
 import React from 'react';
 
-import selectImg from '../../assets/select.png';
+import selectImg from 'assets/select.png';
 
 import styles from './styles.module.scss';
 
-interface SelectProps {
+type SelectProps = {
   label: string;
   placeholder: string;
   options: { name: string; value: string }[];
+  onChange: (e: any) => any;
+};
 
-  // onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-// const Select: React.FC<SelectProps> = ({ label, placeholder, options, onCahnge }) => {
-const Select: React.FC<SelectProps> = ({ label, placeholder, options }) => {
+const Select: React.FC<SelectProps> = ({ label, placeholder, options, onChange }) => {
   return (
     <div className={styles.wrapper}>
       <label>{label}</label>
       <div>
-        {/* <select onChange={onChange}> */}
-        <select>
+        <select onChange={(e) => onChange(e.target.value)}>
           <option disabled selected hidden value="">
             {placeholder}
           </option>

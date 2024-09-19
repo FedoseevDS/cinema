@@ -1,9 +1,9 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import emptyImg from '../../assets/empty.png';
+import emptyImg from 'assets/empty.png';
 
-import { useGetItemQuery } from '../../store/requests';
+import { useGetItemQuery } from 'store/requests';
 
 import styles from './styles.module.scss';
 

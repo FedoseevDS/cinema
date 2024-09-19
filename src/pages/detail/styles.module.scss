@@ -32,15 +32,16 @@
   flex-direction: column;
   gap: 30px;
 
+  & > span {
+    font-size: 14px;
+    font-weight: 400;
+    color: #333333;
+  }
+  
   & > span:first-child {
     font-size: 24px;
     font-weight: 700;
     color: #3a4f39;
   }
 
-  & > span:last-child {
-    font-size: 14px;
-    font-weight: 400;
-    color: #333333;
-  }
 }

@@ -1,40 +1,59 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Content } from 'antd/es/layout/layout';
 
-import Search from '../../components/search';
-import Select from '../../components/select';
-import Cards from '../../components/cards/cards';
+import Search from 'components/search';
+import Select from 'components/select';
+import Cards from 'components/cards';
 
-import { useGetDataQuery, useGetSearchQuery } from '../../store/requests';
+import { useGetDataQuery, useGetFiltersQuery, useGetSearchQuery } from 'store/requests';
 
-import styles from './styles.module.scss';
 import { countriesConfig, genresConfig, ratingsConfig, yearsConfig } from './const';
+import styles from './styles.module.scss';
 
-interface MapItem {
+type MapItem = {
   name: string;
   poster: { previewUrl: string };
   id: number;
-}
+};
 
 const Main: React.FC = () => {
   const [value, setValue] = useState('');
   const [showMore, setShowMore] = useState(20);
+  const [genres, setGenres] = useState('');
+  const [countries, setCountries] = useState('');
+  const [years, setYears] = useState('');
+  const [ratings, setRatings] = useState('');
 
-  const { data } = useGetDataQuery({ limit: !value ? showMore : 20 });
-  const { data: filterData } = useGetSearchQuery(
-    { limit: value ? showMore : 20, value },
+  const isFilter = useMemo(
+    () => !!genres || !!countries || !!years || !!ratings,
+    [genres, countries, years, ratings],
+  );
+
+  const { data } = useGetDataQuery({ page: !value ? showMore : 1 });
+  const { data: searchData } = useGetSearchQuery(
+    { page: value ? showMore : 1, value },
     { skip: !value },
+  );
+  const { data: filterData } = useGetFiltersQuery(
+    {
+      country: countries,
+      genres: genres,
+      ratings: ratings,
+      year: years,
+    },
+    { skip: !isFilter },
   );
 
   const filteredData = useMemo(() => {
+    if (searchData) {
+      return searchData.docs;
+    }
     if (filterData) {
       return filterData.docs;
     }
 
     return data?.docs;
-  }, [data, filterData]);
-
-  console.log(filteredData);
+  }, [data, searchData, filterData]);
 
   const showCards = useMemo(() => {
     return filteredData?.map((i: MapItem) => {
@@ -53,13 +72,8 @@ const Main: React.FC = () => {
   }, []);
 
   const handleButton = useCallback(() => {
-    setShowMore((e) => e + 20);
+    setShowMore((e) => e + 1);
   }, []);
-
-  // const [genres, setGenres] = useState([]);
-  // const [countries, setCountries] = useState([]);
-  // const [years, setYears] = useState([]);
-  // const [ratings, setRatings] = useState([]);
 
   return (
     <Content className={styles.content}>
@@ -70,13 +84,13 @@ const Main: React.FC = () => {
             label="Жанр"
             placeholder="Выберите жанр"
             options={genresConfig}
-            // onChange={setGenres}
+            onChange={setGenres}
           />
           <Select
             label="Страна"
             placeholder="Выберите страну"
             options={countriesConfig}
-            // onChange={setCountries}
+            onChange={setCountries}
           />
         </div>
         <div className={styles.filters}>
@@ -84,13 +98,13 @@ const Main: React.FC = () => {
             label="Год"
             placeholder="Выберите год"
             options={yearsConfig}
-            // onChange={setYears}
+            onChange={setYears}
           />
           <Select
-            label="Рейтинг"
+            label="Рейтинг Кинопоиска"
             placeholder="Выберите рейтинг"
             options={ratingsConfig}
-            // onChange={setRatings}
+            onChange={setRatings}
           />
         </div>
       </div>
