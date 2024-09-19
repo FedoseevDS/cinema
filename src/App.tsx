@@ -9,8 +9,6 @@ import Detail from 'pages/detail';
 
 import store from 'store';
 
-import './styles/global.scss';
-
 const router = createBrowserRouter([
   {
     children: [
