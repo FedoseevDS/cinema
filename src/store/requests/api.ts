@@ -13,7 +13,7 @@ export const requestsApi = createApi({
     getData: builder.query({
       query: ({ page }) => ({
         method: 'get',
-        params: { limit: 20, notNullFields: 'name', page },
+        params: { limit: 50, notNullFields: 'name', page },
         url: '/movie',
       }),
     }),
@@ -24,7 +24,7 @@ export const requestsApi = createApi({
           params: {
             ...(country ? { 'countries.name': country } : null),
             ...(genres ? { 'genres.name': genres } : null),
-            limit: 20,
+            limit: 50,
             page,
             ...(ratings ? { 'rating.kp': ratings } : null),
             ...(year ? { year: year } : null),
@@ -44,7 +44,7 @@ export const requestsApi = createApi({
       query: ({ value, page }) => ({
         method: 'get',
         params: {
-          limit: 20,
+          limit: 50,
           page,
           query: value,
         },

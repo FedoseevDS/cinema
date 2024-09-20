@@ -9,6 +9,13 @@ export default defineConfig({
   server: {
     port: 5004,
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler',
+      },
+    },
+  },
   resolve: {
     extensions: ['.scss', '.js', '.jsx', '.ts', '.tsx'],
     alias: {
