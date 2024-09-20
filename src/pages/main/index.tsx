@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Content } from 'antd/es/layout/layout';
+import List from 'rc-virtual-list';
 
 import Search from 'components/search';
 import Select from 'components/select';
@@ -55,16 +56,6 @@ const Main: React.FC = () => {
     return data?.docs;
   }, [data, searchData, filterData]);
 
-  const showCards = useMemo(() => {
-    return filteredData?.map((i: MapItem) => {
-      return (
-        <React.Fragment key={i.id}>
-          <Cards name={i.name} poster={i.poster} id={i.id} />
-        </React.Fragment>
-      );
-    });
-  }, [filteredData]);
-
   const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setTimeout(() => {
       setValue(event.target.value);
@@ -110,7 +101,13 @@ const Main: React.FC = () => {
       </div>
       <div>Найдено {filteredData?.length} результатов</div>
       {filteredData?.length ? (
-        <div className={styles.cards}>{showCards}</div>
+        <div className={styles.virtualList}>
+          <List data={filteredData} itemKey={(item) => item.id} height={780} itemHeight={100}>
+            {(item: MapItem) => (
+              <Cards key={item.id} name={item.name} poster={item.poster} id={item.id} />
+            )}
+          </List>
+        </div>
       ) : (
         <div>Нет данных</div>
       )}

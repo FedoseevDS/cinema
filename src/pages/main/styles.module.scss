@@ -25,13 +25,6 @@
   gap: 30px;
 }
 
-.cards {
-  width: 1320px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
 .showMore {
   width: 156px;
   height: 44px;
@@ -46,5 +39,22 @@
   &:hover {
     cursor: pointer;
     opacity: 0.7;
+  }
+}
+
+.virtualList {
+  width: 1320px;
+
+  div[class~='rc-virtual-list-holder-inner'] {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  div[class~='rc-virtual-list-holder'] {
+    
+    & > div {
+      width: 1320px;
+    }
   }
 }
