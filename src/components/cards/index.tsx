@@ -12,10 +12,10 @@ interface CardsProps {
 }
 
 const Cards: React.FC<CardsProps> = ({ name, poster, id }) => {
-  const { pathname } = useLocation();
+  // const { pathname } = useLocation();
 
   return (
-    <Link to={`${pathname}/${id.toString()}`} className={styles.wrapper}>
+    <Link to={`/${id.toString()}`} className={styles.wrapper}>
       <div className={styles.title}>
         <span>{name || 'Нет данных'}</span>
       </div>
