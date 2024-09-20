@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import emptyImg from 'assets/empty.png';
 
@@ -12,8 +12,6 @@ interface CardsProps {
 }
 
 const Cards: React.FC<CardsProps> = ({ name, poster, id }) => {
-  // const { pathname } = useLocation();
-
   return (
     <Link to={`/${id.toString()}`} className={styles.wrapper}>
       <div className={styles.title}>
