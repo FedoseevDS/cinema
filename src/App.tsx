@@ -14,11 +14,11 @@ const router = createBrowserRouter([
     children: [
       {
         element: <Main />,
-        path: 'cinema',
+        path: '/',
       },
       {
         element: <Detail />,
-        path: 'cinema/:id',
+        path: '/:id',
       },
     ],
     element: <MainLayout />,
