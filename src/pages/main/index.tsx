@@ -83,8 +83,6 @@ const Main: React.FC = () => {
             options={countriesConfig}
             onChange={setCountries}
           />
-        </div>
-        <div className={styles.filters}>
           <Select
             label="Год"
             placeholder="Выберите год"
