@@ -1,5 +1,7 @@
 .wrapper {
   position: relative;
+  min-width: 424px;
+  
 
   & > input {
     width: 100%;

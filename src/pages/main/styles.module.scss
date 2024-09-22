@@ -10,19 +10,19 @@
 
 .controlPanel {
   box-sizing: border-box;
-  width: 1320px;
-  height: 248px;
+  max-width: 1320px;
+  min-width: 500px;
+  width: 100%;
   padding: 33px 28px;
   box-shadow: 0px 12px 24px 0px #272D4D33;
-  box-shadow: 0px 1px 2px 0px #1E1E2033;
+  margin: 0 auto;
 }
 
 .filters {
   margin-top: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 10px 40px;
 }
 
 .showMore {
@@ -43,18 +43,27 @@
 }
 
 .virtualList {
-  width: 1320px;
+  max-width: 1320px;
+  width: 100%;
 
-  div[class~='rc-virtual-list-holder-inner'] {
-    flex-direction: row !important;
-    flex-wrap: wrap;
+  div[class~='rc-virtual-list-holder-inner'] {    
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
+    justify-items: center;
   }
 
   div[class~='rc-virtual-list-holder'] {
-    
     & > div {
-      width: 1320px;
+      max-width: 1320px;
     }
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .controlPanel {
+    padding: 33px 8%;
+    margin: 0 auto;
+    min-width: 0;
   }
 }

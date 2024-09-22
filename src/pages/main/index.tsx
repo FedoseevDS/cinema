@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Content } from 'antd/es/layout/layout';
 import List from 'rc-virtual-list';
 
@@ -24,6 +24,7 @@ const Main: React.FC = () => {
   const [countries, setCountries] = useState('');
   const [years, setYears] = useState('');
   const [ratings, setRatings] = useState('');
+  const [height, setHeight] = useState(window.innerHeight);
 
   const isFilter = useMemo(
     () => !!genres || !!countries || !!years || !!ratings,
@@ -44,6 +45,8 @@ const Main: React.FC = () => {
     },
     { skip: !isFilter },
   );
+
+  const prepareHeight = useMemo(() => (height < 1000 ? 500 : height - 500), [height]);
 
   const filteredData = useMemo(() => {
     if (searchData) {
@@ -66,6 +69,12 @@ const Main: React.FC = () => {
     setShowMore((e) => e + 1);
   }, []);
 
+  useEffect(() => {
+    const updateHeight = () => setHeight(window.innerHeight);
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
+
   return (
     <Content className={styles.content}>
       <div className={styles.controlPanel}>
@@ -83,8 +92,6 @@ const Main: React.FC = () => {
             options={countriesConfig}
             onChange={setCountries}
           />
-        </div>
-        <div className={styles.filters}>
           <Select
             label="Год"
             placeholder="Выберите год"
@@ -102,7 +109,12 @@ const Main: React.FC = () => {
       <div>Найдено {filteredData?.length} результатов</div>
       {filteredData?.length ? (
         <div className={styles.virtualList}>
-          <List data={filteredData} itemKey={(item) => item.id} height={780} itemHeight={100}>
+          <List
+            data={filteredData}
+            itemKey={(item) => item.id}
+            height={prepareHeight}
+            itemHeight={100}
+          >
             {(item: MapItem) => (
               <Cards key={item.id} name={item.name} poster={item.poster} id={item.id} />
             )}

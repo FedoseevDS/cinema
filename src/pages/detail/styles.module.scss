@@ -3,31 +3,37 @@
   display: flex;
   justify-content: center;
   background: #ffffff;
+  min-height: 716px;
+  padding: 50px 15.63px;
 
   & > div {
-    display: flex;
-    gap: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     border-radius: 4px;
     padding: 33px 28px;
-    width: 1200px;
-    height: 616px;
+    max-width: 1200px;
+    width: 100%;
+    min-height: 616px;
     box-shadow: 0px 12px 24px 0px #272D4D33;
-    box-shadow: 0px 1px 2px 0px #1E1E2033;
   }
 }
 
 .poster {
-  width: 557px;
+  max-width: 557px;
+  width: 100%;
   height: 550px;
   overflow: hidden;
 
   & > img {
     width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 }
 
 .content {
-  width: 557px;
+  transition: ease-out .5s;
+  max-width: 557px;
   display: flex;
   flex-direction: column;
   gap: 30px;
@@ -43,5 +49,11 @@
     font-weight: 700;
     color: #3a4f39;
   }
+}
 
+@media screen and (max-width: 700px) {
+  .content {
+    transition: ease-out .5s;
+    padding-top: 30px;
+  }
 }

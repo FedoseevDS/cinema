@@ -1,4 +1,4 @@
-import React from 'react';
+import { forwardRef } from 'react';
 import { Link } from 'react-router-dom';
 
 import emptyImg from 'assets/empty.png';
@@ -11,7 +11,7 @@ interface CardsProps {
   id: number;
 }
 
-const Cards: React.FC<CardsProps> = ({ name, poster, id }) => {
+const Cards = forwardRef<HTMLAnchorElement, CardsProps>(({ name, poster, id }) => {
   return (
     <Link to={`/${id.toString()}`} className={styles.wrapper}>
       <div className={styles.title}>
@@ -22,6 +22,6 @@ const Cards: React.FC<CardsProps> = ({ name, poster, id }) => {
       </div>
     </Link>
   );
-};
+});
 
 export default Cards;
