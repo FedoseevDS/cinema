@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Content } from 'antd/es/layout/layout';
 import List from 'rc-virtual-list';
 
@@ -6,9 +6,12 @@ import Search from 'components/search';
 import Select from 'components/select';
 import Cards from 'components/cards';
 
+import useDebounce from 'hooks/useDebouncedCallback';
+
 import { useGetDataQuery, useGetFiltersQuery, useGetSearchQuery } from 'store/requests';
 
 import { countriesConfig, genresConfig, ratingsConfig, yearsConfig } from './const';
+
 import styles from './styles.module.scss';
 
 type MapItem = {
@@ -17,24 +20,26 @@ type MapItem = {
   id: number;
 };
 
-const Main: React.FC = () => {
-  const [value, setValue] = useState('');
+const Main = () => {
   const [showMore, setShowMore] = useState(20);
   const [genres, setGenres] = useState('');
   const [countries, setCountries] = useState('');
   const [years, setYears] = useState('');
   const [ratings, setRatings] = useState('');
   const [height, setHeight] = useState(window.innerHeight);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const debouncedSearchTerm = useDebounce(searchTerm, 750);
 
   const isFilter = useMemo(
     () => !!genres || !!countries || !!years || !!ratings,
     [genres, countries, years, ratings],
   );
 
-  const { data } = useGetDataQuery({ page: !value ? showMore : 1 });
+  const { data } = useGetDataQuery({ page: !debouncedSearchTerm ? showMore : 1 });
   const { data: searchData } = useGetSearchQuery(
-    { page: value ? showMore : 1, value },
-    { skip: !value },
+    { page: debouncedSearchTerm ? showMore : 1, value: debouncedSearchTerm },
+    { skip: !debouncedSearchTerm },
   );
   const { data: filterData } = useGetFiltersQuery(
     {
@@ -59,14 +64,12 @@ const Main: React.FC = () => {
     return data?.docs;
   }, [data, searchData, filterData]);
 
-  const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setTimeout(() => {
-      setValue(event.target.value);
-    }, 4000);
-  }, []);
-
   const handleButton = useCallback(() => {
     setShowMore((e) => e + 1);
+  }, []);
+
+  const handleSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
   }, []);
 
   useEffect(() => {
@@ -78,7 +81,7 @@ const Main: React.FC = () => {
   return (
     <Content className={styles.content}>
       <div className={styles.controlPanel}>
-        <Search onChange={handleChange} />
+        <Search onChange={handleSearchChange} />
         <div className={styles.filters}>
           <Select
             label="Жанр"
