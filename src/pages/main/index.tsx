@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Content } from 'antd/es/layout/layout';
+import { Layout } from 'antd';
 import List from 'rc-virtual-list';
 
 import Search from 'components/search';
@@ -21,7 +21,7 @@ type MapItem = {
 };
 
 const Main = () => {
-  const [showMore, setShowMore] = useState(20);
+  const [showMore, setShowMore] = useState(1);
   const [genres, setGenres] = useState('');
   const [countries, setCountries] = useState('');
   const [years, setYears] = useState('');
@@ -79,7 +79,7 @@ const Main = () => {
   }, []);
 
   return (
-    <Content className={styles.content}>
+    <Layout.Content className={styles.content}>
       <div className={styles.controlPanel}>
         <Search onChange={handleSearchChange} />
         <div className={styles.filters}>
@@ -116,7 +116,7 @@ const Main = () => {
             data={filteredData}
             itemKey={(item) => item.id}
             height={prepareHeight}
-            itemHeight={100}
+            itemHeight={120}
           >
             {(item: MapItem) => (
               <Cards key={item.id} name={item.name} poster={item.poster} id={item.id} />
@@ -129,7 +129,7 @@ const Main = () => {
       <button className={styles.showMore} onClick={handleButton}>
         Показать еще
       </button>
-    </Content>
+    </Layout.Content>
   );
 };
 

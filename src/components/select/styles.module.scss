@@ -16,10 +16,12 @@
 
   & > div {
     position: relative;
+    width: 100%;
   }
 
   & select {
-    width: 405px;
+    max-width: 424px;
+    width: 100%;
     height: 54px;
     padding: 7px 10px 7px 16px;
     background: #eaeaea;
@@ -38,21 +40,27 @@
       opacity: 0.7;
     }
   }
+}
 
-  & img {
-    position: absolute;
+.iconSelect {
+  position: absolute;
+  border: none;
+  padding: 0;
+  background: none;
+  right: 10px;
+  top: 12px;
+  
+  img {
     width: 30px;
     height: 30px;
-    right: 10px;
-    top: 12px;
   }
 }
 
-@media screen and (max-width: 550px) {
+@media screen and (max-width: 530px) {
   .wrapper {
     flex-wrap: wrap;
 
-    & > div > select {
+    & > div {
       min-width: 424px;
     }
   }
