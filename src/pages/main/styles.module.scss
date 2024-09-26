@@ -61,6 +61,12 @@
   }
 }
 
+@media screen and (max-width: 900px) {
+  .filters {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
 @media screen and (max-width: 560px) {
   .controlPanel {
     width: 500px;
