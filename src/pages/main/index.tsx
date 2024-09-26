@@ -13,6 +13,7 @@ import { useGetDataQuery, useGetFiltersQuery, useGetSearchQuery } from 'store/re
 import { countriesConfig, genresConfig, ratingsConfig, yearsConfig } from './const';
 
 import styles from './styles.module.scss';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 type MapItem = {
   name: string;
@@ -27,9 +28,9 @@ const Main = () => {
   const [years, setYears] = useState('');
   const [ratings, setRatings] = useState('');
   const [height, setHeight] = useState(window.innerHeight);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const debouncedSearchTerm = useDebounce(searchTerm, 750);
+  const debouncedSearchTerm = useDebounce(searchParams.get('search') || '', 750);
 
   const isFilter = useMemo(
     () => !!genres || !!countries || !!years || !!ratings,
@@ -41,6 +42,7 @@ const Main = () => {
     { page: debouncedSearchTerm ? showMore : 1, value: debouncedSearchTerm },
     { skip: !debouncedSearchTerm },
   );
+
   const { data: filterData } = useGetFiltersQuery(
     {
       country: countries,
@@ -68,9 +70,22 @@ const Main = () => {
     setShowMore((e) => e + 1);
   }, []);
 
-  const handleSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  }, []);
+  const handleSearchChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value;
+
+      if (value) {
+        setSearchParams({ search: value }, { replace: true });
+      } else {
+        setSearchParams((prev) => {
+          const newParams = new URLSearchParams(prev);
+          newParams.delete('search');
+          return newParams;
+        });
+      }
+    },
+    [setSearchParams],
+  );
 
   useEffect(() => {
     const updateHeight = () => setHeight(window.innerHeight);
@@ -78,10 +93,22 @@ const Main = () => {
     return () => window.removeEventListener('resize', updateHeight);
   }, []);
 
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === '/') {
+      setSearchParams((prev) => {
+        const newParams = new URLSearchParams(prev);
+        newParams.delete('search');
+        return newParams;
+      });
+    }
+  }, []);
+
   return (
     <Layout.Content className={styles.content}>
       <div className={styles.controlPanel}>
-        <Search onChange={handleSearchChange} />
+        <Search onChange={handleSearchChange} value={searchParams.get('search') || ''} />
         <div className={styles.filters}>
           <Select
             label="Жанр"
