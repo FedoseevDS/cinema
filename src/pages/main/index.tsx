@@ -30,6 +30,8 @@ const Main = () => {
   const [height, setHeight] = useState(window.innerHeight);
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const location = useLocation();
+
   const debouncedSearchTerm = useDebounce(searchParams.get('search') || '', 750);
 
   const isFilter = useMemo(
@@ -87,13 +89,25 @@ const Main = () => {
     [setSearchParams],
   );
 
+  const handlePopupClick = useCallback((e) => {
+    setSearchParams({ search: e.target.textContent }, { replace: true });
+    console.log('e', e.target.textContent);
+  }, []);
+
+  useEffect(() => {
+    const storedHistory = localStorage.setItem(
+      'searchHistory',
+      JSON.stringify(debouncedSearchTerm),
+    );
+
+    console.log('storedHistory', storedHistory);
+  }, [debouncedSearchTerm]);
+
   useEffect(() => {
     const updateHeight = () => setHeight(window.innerHeight);
     window.addEventListener('resize', updateHeight);
     return () => window.removeEventListener('resize', updateHeight);
   }, []);
-
-  const location = useLocation();
 
   useEffect(() => {
     if (location.pathname === '/') {
@@ -108,7 +122,12 @@ const Main = () => {
   return (
     <Layout.Content className={styles.content}>
       <div className={styles.controlPanel}>
-        <Search onChange={handleSearchChange} value={searchParams.get('search') || ''} />
+        <Search
+          onChange={handleSearchChange}
+          onPopupClick={handlePopupClick}
+          value={searchParams.get('search') || ''}
+          option={[]}
+        />
         <div className={styles.filters}>
           <Select
             label="Жанр"
