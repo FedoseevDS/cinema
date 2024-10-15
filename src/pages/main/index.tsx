@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { Layout } from 'antd';
 import List from 'rc-virtual-list';
 
@@ -12,8 +13,9 @@ import { useGetDataQuery, useGetFiltersQuery, useGetSearchQuery } from 'store/re
 
 import { countriesConfig, genresConfig, ratingsConfig, yearsConfig } from './const';
 
+import { initialState, reducer } from 'reducer';
+
 import styles from './styles.module.scss';
-import { useLocation, useSearchParams } from 'react-router-dom';
 
 type MapItem = {
   name: string;
@@ -22,6 +24,7 @@ type MapItem = {
 };
 
 const Main = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
   const [showMore, setShowMore] = useState(1);
   const [genres, setGenres] = useState('');
   const [countries, setCountries] = useState('');
@@ -31,6 +34,10 @@ const Main = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const debouncedSearchTerm = useDebounce(searchParams.get('search') || '', 750);
+
+  useEffect(() => {
+    dispatch({ payload: debouncedSearchTerm, type: 'search' });
+  }, [debouncedSearchTerm]);
 
   const isFilter = useMemo(
     () => !!genres || !!countries || !!years || !!ratings,
@@ -42,6 +49,8 @@ const Main = () => {
     { page: debouncedSearchTerm ? showMore : 1, value: debouncedSearchTerm },
     { skip: !debouncedSearchTerm },
   );
+
+  console.log('data', data);
 
   const { data: filterData } = useGetFiltersQuery(
     {
@@ -87,6 +96,11 @@ const Main = () => {
     [setSearchParams],
   );
 
+  const handlePopupClick = useCallback((e) => {
+    const text = e.target.textContent;
+    setSearchParams({ search: text }, { replace: true });
+  }, []);
+
   useEffect(() => {
     const updateHeight = () => setHeight(window.innerHeight);
     window.addEventListener('resize', updateHeight);
@@ -108,7 +122,12 @@ const Main = () => {
   return (
     <Layout.Content className={styles.content}>
       <div className={styles.controlPanel}>
-        <Search onChange={handleSearchChange} value={searchParams.get('search') || ''} />
+        <Search
+          onChange={handleSearchChange}
+          value={searchParams.get('search') || ''}
+          option={Array.from(state.search)}
+          onPopupClick={handlePopupClick}
+        />
         <div className={styles.filters}>
           <Select
             label="Жанр"
