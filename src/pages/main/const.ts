@@ -1,4 +1,5 @@
 export const genresConfig = [
+  { name: 'Выберите жанр', value: 'null' },
   { name: 'Боевик', value: 'боевик' },
   { name: 'Детский', value: 'детский' },
   { name: 'Документальный', value: 'документальный' },
@@ -18,6 +19,7 @@ export const genresConfig = [
 ];
 
 export const countriesConfig = [
+  { name: 'Выберите страну', value: 'null' },
   { name: 'Беларусь', value: 'Беларусь' },
   { name: 'Германия', value: 'Германия' },
   { name: 'Египет', value: 'Египет' },
@@ -29,6 +31,7 @@ export const countriesConfig = [
 ];
 
 export const yearsConfig = [
+  { name: 'Выберите год', value: 'null' },
   { name: '2000', value: '2000' },
   { name: '2001', value: '2001' },
   { name: '2002', value: '2002' },
@@ -57,6 +60,7 @@ export const yearsConfig = [
 ];
 
 export const ratingsConfig = [
+  { name: 'Выберите рейтинг', value: 'null' },
   { name: '1-3', value: '1-3' },
   { name: '4-6', value: '4-6' },
   { name: '7-8', value: '7-8' },

@@ -50,14 +50,12 @@ const Main = () => {
     { skip: !debouncedSearchTerm },
   );
 
-  console.log('data', data);
-
   const { data: filterData } = useGetFiltersQuery(
     {
-      country: countries,
-      genres: genres,
-      ratings: ratings,
-      year: years,
+      country: countries === 'null' ? JSON.parse(countries) : countries,
+      genres: genres === 'null' ? JSON.parse(genres) : genres,
+      ratings: ratings === 'null' ? JSON.parse(ratings) : ratings,
+      year: years === 'null' ? JSON.parse(years) : years,
     },
     { skip: !isFilter },
   );
@@ -129,36 +127,17 @@ const Main = () => {
           onPopupClick={handlePopupClick}
         />
         <div className={styles.filters}>
-          <Select
-            label="Жанр"
-            placeholder="Выберите жанр"
-            options={genresConfig}
-            onChange={setGenres}
-          />
-          <Select
-            label="Страна"
-            placeholder="Выберите страну"
-            options={countriesConfig}
-            onChange={setCountries}
-          />
-          <Select
-            label="Год"
-            placeholder="Выберите год"
-            options={yearsConfig}
-            onChange={setYears}
-          />
-          <Select
-            label="Рейтинг Кинопоиска"
-            placeholder="Выберите рейтинг"
-            options={ratingsConfig}
-            onChange={setRatings}
-          />
+          <Select label="Жанр" options={genresConfig} onChange={setGenres} />
+          <Select label="Страна" options={countriesConfig} onChange={setCountries} />
+          <Select label="Год" options={yearsConfig} onChange={setYears} />
+          <Select label="Рейтинг Кинопоиска" options={ratingsConfig} onChange={setRatings} />
         </div>
       </div>
       <div>Найдено {filteredData?.length} результатов</div>
       {filteredData?.length ? (
-        <div className={styles.virtualList}>
+        <div>
           <List
+            className={styles.virtualList}
             data={filteredData}
             itemKey={(item) => item.id}
             height={prepareHeight}
