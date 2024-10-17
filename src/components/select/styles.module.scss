@@ -21,6 +21,7 @@
 
   & select {
     max-width: 500px;
+    min-width: 185px;
     width: 100%;
     height: 54px;
     padding: 7px 10px 7px 16px;
@@ -49,6 +50,7 @@
   background: none;
   right: 10px;
   top: 12px;
+  pointer-events: none;
   
   img {
     width: 30px;

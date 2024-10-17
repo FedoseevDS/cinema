@@ -11,9 +11,9 @@ export const requestsApi = createApi({
   }),
   endpoints: (builder) => ({
     getData: builder.query({
-      query: ({ page }) => ({
+      query: ({ limit, page }) => ({
         method: 'get',
-        params: { limit: 30, notNullFields: 'name', page },
+        params: { limit: limit, notNullFields: 'name', page: page },
         url: '/movie',
       }),
     }),

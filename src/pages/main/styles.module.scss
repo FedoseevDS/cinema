@@ -48,16 +48,22 @@
   padding: 0 24px;
 
   div[class~='rc-virtual-list-holder-inner'] {    
-    display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-    gap: 20px;
-    justify-items: center;
-  }
+        display: grid !important;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        justify-items: center;
+      }
+    
+      div[class~='rc-virtual-list-holder'] {
+        & > div {
+          max-width: 1320px;
+        }
+      }
+}
 
-  div[class~='rc-virtual-list-holder'] {
-    & > div {
-      max-width: 1320px;
-    }
+@media screen and (max-width: 900px) {
+  .filters {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
 }
 

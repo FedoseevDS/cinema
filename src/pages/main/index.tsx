@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { Layout } from 'antd';
 import List from 'rc-virtual-list';
 
@@ -12,8 +13,10 @@ import { useGetDataQuery, useGetFiltersQuery, useGetSearchQuery } from 'store/re
 
 import { countriesConfig, genresConfig, ratingsConfig, yearsConfig } from './const';
 
+import { initialState, reducer } from 'reducer';
+
 import styles from './styles.module.scss';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { helpData } from '../../consts/data';
 
 type MapItem = {
   name: string;
@@ -22,53 +25,66 @@ type MapItem = {
 };
 
 const Main = () => {
-  const [showMore, setShowMore] = useState(1);
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const [showMore, setShowMore] = useState(25);
+  const [page, setPage] = useState(1);
   const [genres, setGenres] = useState('');
   const [countries, setCountries] = useState('');
   const [years, setYears] = useState('');
   const [ratings, setRatings] = useState('');
-  const [height, setHeight] = useState(window.innerHeight);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const debouncedSearchTerm = useDebounce(searchParams.get('search') || '', 750);
+
+  useEffect(() => {
+    dispatch({ payload: debouncedSearchTerm, type: 'search' });
+  }, [debouncedSearchTerm]);
 
   const isFilter = useMemo(
     () => !!genres || !!countries || !!years || !!ratings,
     [genres, countries, years, ratings],
   );
 
-  const { data } = useGetDataQuery({ page: !debouncedSearchTerm ? showMore : 1 });
-  const { data: searchData } = useGetSearchQuery(
-    { page: debouncedSearchTerm ? showMore : 1, value: debouncedSearchTerm },
-    { skip: !debouncedSearchTerm },
-  );
+  // const { data } = useGetDataQuery({ limit: !debouncedSearchTerm && showMore, page });
 
-  const { data: filterData } = useGetFiltersQuery(
-    {
-      country: countries,
-      genres: genres,
-      ratings: ratings,
-      year: years,
-    },
-    { skip: !isFilter },
-  );
+  // const { data: searchData } = useGetSearchQuery(
+  //   { page: debouncedSearchTerm ? showMore : 1, value: debouncedSearchTerm },
+  //   { skip: !debouncedSearchTerm },
+  // );
 
-  const prepareHeight = useMemo(() => (height < 1000 ? 500 : height - 500), [height]);
+  // const { data: filterData } = useGetFiltersQuery(
+  //   {
+  //     country: countries === 'null' ? JSON.parse(countries) : countries,
+  //     genres: genres === 'null' ? JSON.parse(genres) : genres,
+  //     ratings: ratings === 'null' ? JSON.parse(ratings) : ratings,
+  //     year: years === 'null' ? JSON.parse(years) : years,
+  //   },
+  //   { skip: !isFilter },
+  // );
 
   const filteredData = useMemo(() => {
-    if (searchData) {
-      return searchData.docs;
-    }
-    if (filterData) {
-      return filterData.docs;
-    }
+    // if (searchData) {
+    //   return searchData.docs;
+    // }
+    // if (filterData) {
+    //   return filterData.docs;
+    // }
 
-    return data?.docs;
-  }, [data, searchData, filterData]);
+    return helpData.docs;
+
+    // return data?.docs;
+    // }, [data, searchData, filterData]);
+  }, []);
 
   const handleButton = useCallback(() => {
-    setShowMore((e) => e + 1);
-  }, []);
+    if (showMore < 250) {
+      setShowMore((e) => e + 25);
+    }
+
+    if (showMore === 250) {
+      setPage((e) => e + 1);
+    }
+  }, [showMore]);
 
   const handleSearchChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,10 +103,9 @@ const Main = () => {
     [setSearchParams],
   );
 
-  useEffect(() => {
-    const updateHeight = () => setHeight(window.innerHeight);
-    window.addEventListener('resize', updateHeight);
-    return () => window.removeEventListener('resize', updateHeight);
+  const handlePopupClick = useCallback((e) => {
+    const text = e.target.textContent;
+    setSearchParams({ search: text }, { replace: true });
   }, []);
 
   const location = useLocation();
@@ -108,43 +123,26 @@ const Main = () => {
   return (
     <Layout.Content className={styles.content}>
       <div className={styles.controlPanel}>
-        <Search onChange={handleSearchChange} value={searchParams.get('search') || ''} />
+        <Search
+          onChange={handleSearchChange}
+          value={searchParams.get('search') || ''}
+          option={Array.from(state.search)}
+          onPopupClick={handlePopupClick}
+        />
         <div className={styles.filters}>
-          <Select
-            label="Жанр"
-            placeholder="Выберите жанр"
-            options={genresConfig}
-            onChange={setGenres}
-          />
-          <Select
-            label="Страна"
-            placeholder="Выберите страну"
-            options={countriesConfig}
-            onChange={setCountries}
-          />
-          <Select
-            label="Год"
-            placeholder="Выберите год"
-            options={yearsConfig}
-            onChange={setYears}
-          />
-          <Select
-            label="Рейтинг Кинопоиска"
-            placeholder="Выберите рейтинг"
-            options={ratingsConfig}
-            onChange={setRatings}
-          />
+          <Select label="Жанр" options={genresConfig} onChange={setGenres} />
+          <Select label="Страна" options={countriesConfig} onChange={setCountries} />
+          <Select label="Год" options={yearsConfig} onChange={setYears} />
+          <Select label="Рейтинг Кинопоиска" options={ratingsConfig} onChange={setRatings} />
         </div>
       </div>
-      <div>Найдено {filteredData?.length} результатов</div>
+      <div>
+        <span>Найдено {filteredData?.length} результатов,</span>
+        <span> Страница {page}</span>
+      </div>
       {filteredData?.length ? (
         <div className={styles.virtualList}>
-          <List
-            data={filteredData}
-            itemKey={(item) => item.id}
-            height={prepareHeight}
-            itemHeight={120}
-          >
+          <List data={filteredData} itemKey={(item) => item.id} height={830} itemHeight={120}>
             {(item: MapItem) => (
               <Cards key={item.id} name={item.name} poster={item.poster} id={item.id} />
             )}

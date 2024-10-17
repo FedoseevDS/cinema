@@ -9,6 +9,7 @@
   & > div {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
     border-radius: 4px;
     padding: 33px 28px;
     max-width: 1200px;
@@ -54,6 +55,5 @@
 @media screen and (max-width: 700px) {
   .content {
     transition: ease-out .5s;
-    padding-top: 30px;
   }
 }

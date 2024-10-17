@@ -24,6 +24,7 @@ export default defineConfig({
       hooks: resolve(__dirname, './src/hooks'),
       layouts: resolve(__dirname, './src/layouts'),
       pages: resolve(__dirname, './src/pages'),
+      reducer: resolve(__dirname, './src/reducer'),
       store: resolve(__dirname, './src/store'),
     },
   },
