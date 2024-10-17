@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { Layout } from 'antd';
 import List from 'rc-virtual-list';
@@ -16,6 +16,7 @@ import { countriesConfig, genresConfig, ratingsConfig, yearsConfig } from './con
 import { initialState, reducer } from 'reducer';
 
 import styles from './styles.module.scss';
+import { helpData } from '../../consts/data';
 
 type MapItem = {
   name: string;
@@ -25,12 +26,12 @@ type MapItem = {
 
 const Main = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [showMore, setShowMore] = useState(1);
+  const [showMore, setShowMore] = useState(25);
+  const [page, setPage] = useState(1);
   const [genres, setGenres] = useState('');
   const [countries, setCountries] = useState('');
   const [years, setYears] = useState('');
   const [ratings, setRatings] = useState('');
-  const [height, setHeight] = useState(window.innerHeight);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const debouncedSearchTerm = useDebounce(searchParams.get('search') || '', 750);
@@ -44,38 +45,46 @@ const Main = () => {
     [genres, countries, years, ratings],
   );
 
-  const { data } = useGetDataQuery({ page: !debouncedSearchTerm ? showMore : 1 });
-  const { data: searchData } = useGetSearchQuery(
-    { page: debouncedSearchTerm ? showMore : 1, value: debouncedSearchTerm },
-    { skip: !debouncedSearchTerm },
-  );
+  // const { data } = useGetDataQuery({ limit: !debouncedSearchTerm && showMore, page });
 
-  const { data: filterData } = useGetFiltersQuery(
-    {
-      country: countries === 'null' ? JSON.parse(countries) : countries,
-      genres: genres === 'null' ? JSON.parse(genres) : genres,
-      ratings: ratings === 'null' ? JSON.parse(ratings) : ratings,
-      year: years === 'null' ? JSON.parse(years) : years,
-    },
-    { skip: !isFilter },
-  );
+  // const { data: searchData } = useGetSearchQuery(
+  //   { page: debouncedSearchTerm ? showMore : 1, value: debouncedSearchTerm },
+  //   { skip: !debouncedSearchTerm },
+  // );
 
-  const prepareHeight = useMemo(() => (height < 1000 ? 500 : height - 500), [height]);
+  // const { data: filterData } = useGetFiltersQuery(
+  //   {
+  //     country: countries === 'null' ? JSON.parse(countries) : countries,
+  //     genres: genres === 'null' ? JSON.parse(genres) : genres,
+  //     ratings: ratings === 'null' ? JSON.parse(ratings) : ratings,
+  //     year: years === 'null' ? JSON.parse(years) : years,
+  //   },
+  //   { skip: !isFilter },
+  // );
 
   const filteredData = useMemo(() => {
-    if (searchData) {
-      return searchData.docs;
-    }
-    if (filterData) {
-      return filterData.docs;
-    }
+    // if (searchData) {
+    //   return searchData.docs;
+    // }
+    // if (filterData) {
+    //   return filterData.docs;
+    // }
 
-    return data?.docs;
-  }, [data, searchData, filterData]);
+    return helpData.docs;
+
+    // return data?.docs;
+    // }, [data, searchData, filterData]);
+  }, []);
 
   const handleButton = useCallback(() => {
-    setShowMore((e) => e + 1);
-  }, []);
+    if (showMore < 250) {
+      setShowMore((e) => e + 25);
+    }
+
+    if (showMore === 250) {
+      setPage((e) => e + 1);
+    }
+  }, [showMore]);
 
   const handleSearchChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,12 +106,6 @@ const Main = () => {
   const handlePopupClick = useCallback((e) => {
     const text = e.target.textContent;
     setSearchParams({ search: text }, { replace: true });
-  }, []);
-
-  useEffect(() => {
-    const updateHeight = () => setHeight(window.innerHeight);
-    window.addEventListener('resize', updateHeight);
-    return () => window.removeEventListener('resize', updateHeight);
   }, []);
 
   const location = useLocation();
@@ -133,16 +136,13 @@ const Main = () => {
           <Select label="Рейтинг Кинопоиска" options={ratingsConfig} onChange={setRatings} />
         </div>
       </div>
-      <div>Найдено {filteredData?.length} результатов</div>
+      <div>
+        <span>Найдено {filteredData?.length} результатов,</span>
+        <span> Страница {page}</span>
+      </div>
       {filteredData?.length ? (
-        <div>
-          <List
-            className={styles.virtualList}
-            data={filteredData}
-            itemKey={(item) => item.id}
-            height={prepareHeight}
-            itemHeight={120}
-          >
+        <div className={styles.virtualList}>
+          <List data={filteredData} itemKey={(item) => item.id} height={830} itemHeight={120}>
             {(item: MapItem) => (
               <Cards key={item.id} name={item.name} poster={item.poster} id={item.id} />
             )}
