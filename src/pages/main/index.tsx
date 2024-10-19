@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { Layout } from 'antd';
 import List from 'rc-virtual-list';
@@ -16,7 +16,7 @@ import { countriesConfig, genresConfig, ratingsConfig, yearsConfig } from './con
 import { initialState, reducer } from 'reducer';
 
 import styles from './styles.module.scss';
-import { helpData } from '../../consts/data';
+// import { helpData } from '../../consts/data';
 
 type MapItem = {
   name: string;
@@ -45,36 +45,36 @@ const Main = () => {
     [genres, countries, years, ratings],
   );
 
-  // const { data } = useGetDataQuery({ limit: !debouncedSearchTerm && showMore, page });
+  const { data } = useGetDataQuery({ limit: !debouncedSearchTerm && showMore, page });
 
-  // const { data: searchData } = useGetSearchQuery(
-  //   { page: debouncedSearchTerm ? showMore : 1, value: debouncedSearchTerm },
-  //   { skip: !debouncedSearchTerm },
-  // );
+  const { data: searchData } = useGetSearchQuery(
+    { limit: debouncedSearchTerm && showMore, value: debouncedSearchTerm },
+    { skip: !debouncedSearchTerm },
+  );
 
-  // const { data: filterData } = useGetFiltersQuery(
-  //   {
-  //     country: countries === 'null' ? JSON.parse(countries) : countries,
-  //     genres: genres === 'null' ? JSON.parse(genres) : genres,
-  //     ratings: ratings === 'null' ? JSON.parse(ratings) : ratings,
-  //     year: years === 'null' ? JSON.parse(years) : years,
-  //   },
-  //   { skip: !isFilter },
-  // );
+  const { data: filterData } = useGetFiltersQuery(
+    {
+      country: countries === 'null' ? JSON.parse(countries) : countries,
+      genres: genres === 'null' ? JSON.parse(genres) : genres,
+      ratings: ratings === 'null' ? JSON.parse(ratings) : ratings,
+      year: years === 'null' ? JSON.parse(years) : years,
+    },
+    { skip: !isFilter },
+  );
 
   const filteredData = useMemo(() => {
-    // if (searchData) {
-    //   return searchData.docs;
-    // }
-    // if (filterData) {
-    //   return filterData.docs;
-    // }
+    if (searchData) {
+      return searchData.docs;
+    }
+    if (filterData) {
+      return filterData.docs;
+    }
 
-    return helpData.docs;
+    // return helpData.docs;
 
-    // return data?.docs;
-    // }, [data, searchData, filterData]);
-  }, []);
+    return data?.docs;
+  }, [data, searchData, filterData]);
+  // }, []);
 
   const handleButton = useCallback(() => {
     if (showMore < 250) {
@@ -89,6 +89,10 @@ const Main = () => {
   const handleSearchChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
+      setGenres('');
+      setCountries('');
+      setYears('');
+      setRatings('');
 
       if (value) {
         setSearchParams({ search: value }, { replace: true });
@@ -130,10 +134,25 @@ const Main = () => {
           onPopupClick={handlePopupClick}
         />
         <div className={styles.filters}>
-          <Select label="Жанр" options={genresConfig} onChange={setGenres} />
-          <Select label="Страна" options={countriesConfig} onChange={setCountries} />
-          <Select label="Год" options={yearsConfig} onChange={setYears} />
-          <Select label="Рейтинг Кинопоиска" options={ratingsConfig} onChange={setRatings} />
+          <Select
+            label="Жанр"
+            options={genresConfig}
+            onChange={setGenres}
+            defaultValue={!!genres}
+          />
+          <Select
+            label="Страна"
+            options={countriesConfig}
+            onChange={setCountries}
+            defaultValue={!!countries}
+          />
+          <Select label="Год" options={yearsConfig} onChange={setYears} defaultValue={!!years} />
+          <Select
+            label="Рейтинг Кинопоиска"
+            options={ratingsConfig}
+            onChange={setRatings}
+            defaultValue={!!ratings}
+          />
         </div>
       </div>
       <div>

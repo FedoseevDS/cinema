@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import searchImg from 'assets/search.png';
 
@@ -12,22 +12,68 @@ type SearchProps = {
   onPopupClick: (e: any) => any;
 };
 
-const Search: React.FC<SearchProps> = ({ onChange, onPopupClick, value, option }) => {
-  const [closePopup, setClosePopup] = useState(true);
+const Search = ({ onChange, onPopupClick, value, option }: SearchProps) => {
+  const [closePopup, setClosePopup] = useState(false);
 
-  const filteredOptions = option.filter((i) => i.includes(value));
+  const filteredOptions = useMemo(
+    () => option.filter((i) => i.includes(value)).sort(),
+    [option, value],
+  );
+
+  const isShowPopup = useMemo(
+    () => !!value && !!filteredOptions.length && !closePopup,
+    [value, filteredOptions, closePopup],
+  );
+
+  const showPopup = useMemo(
+    () => (
+      <div className={styles.popup}>
+        <ul>
+          {filteredOptions?.slice(0, 10).map((text: string) => (
+            <li
+              key={text}
+              onClick={(e) => {
+                onPopupClick(e);
+                setClosePopup(true);
+              }}
+            >
+              {text}
+            </li>
+          ))}
+        </ul>
+      </div>
+    ),
+    [onPopupClick, filteredOptions],
+  );
+
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+      setClosePopup(true);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   return (
-    <div className={styles.wrapper}>
-      <input placeholder="Поиск..." type="text" onChange={onChange} value={value} />
+    <div ref={wrapperRef} className={styles.wrapper}>
+      <input
+        placeholder="Поиск..."
+        type="text"
+        onChange={onChange}
+        value={value}
+        onFocus={() => setClosePopup(false)}
+      />
       <button>
         <img src={searchImg} alt="значек поиска" />
       </button>
-      {value && option.length && closePopup && (
-        <div className={styles.popup}>
-          <ul>{filteredOptions?.map((text: string) => <li onClick={onPopupClick}>{text}</li>)}</ul>
-        </div>
-      )}
+      {(isShowPopup || !closePopup) && showPopup}
     </div>
   );
 };

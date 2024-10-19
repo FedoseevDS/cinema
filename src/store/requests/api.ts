@@ -44,7 +44,7 @@ export const requestsApi = createApi({
       query: ({ value, page }) => ({
         method: 'get',
         params: {
-          limit: 50,
+          limit: 25,
           page,
           query: value,
         },
