@@ -14,7 +14,7 @@ const Select = ({ defaultValue, label, options, onChange }: SelectProps) => {
     <div className={styles.wrapper}>
       <label>{label}</label>
       <div>
-        <select onChange={({ target }) => onChange(target.value)}>
+        <select onChange={({ target }) => onChange({ label, value: target.value })}>
           {options?.map(({ name, value }, index) => (
             <option key={name + value} value={value} selected={!defaultValue && index === 0}>
               {name}

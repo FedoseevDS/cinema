@@ -11,26 +11,11 @@ export const requestsApi = createApi({
   }),
   endpoints: (builder) => ({
     getData: builder.query({
-      query: ({ limit, page }) => ({
-        method: 'get',
-        params: { limit: limit, notNullFields: 'name', page: page },
-        url: '/movie',
-      }),
-    }),
-    getFilters: builder.query({
-      query: ({ year, ratings, genres, country, page }) => {
+      query: ({ params, search }) => {
+        const query = new URLSearchParams(search.query ? search : params).toString();
         return {
           method: 'get',
-          params: {
-            ...(country ? { 'countries.name': country } : null),
-            ...(genres ? { 'genres.name': genres } : null),
-            limit: 10,
-            page,
-            ...(ratings ? { 'rating.kp': ratings } : null),
-            ...(year ? { year: year } : null),
-            notNullFields: 'name',
-          },
-          url: `/movie`,
+          url: search.query ? `/movie/search?${query}` : `/movie?${query}`,
         };
       },
     }),
@@ -38,17 +23,6 @@ export const requestsApi = createApi({
       query: ({ id }) => ({
         method: 'get',
         url: `/movie/${id}`,
-      }),
-    }),
-    getSearch: builder.query({
-      query: ({ value, page }) => ({
-        method: 'get',
-        params: {
-          limit: 25,
-          page,
-          query: value,
-        },
-        url: '/movie/search',
       }),
     }),
   }),

@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useReducer, useState } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useCallback, useEffect, useReducer, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Layout } from 'antd';
 import List from 'rc-virtual-list';
 
@@ -9,7 +9,7 @@ import Cards from 'components/cards';
 
 import useDebounce from 'hooks/useDebouncedCallback';
 
-import { useGetDataQuery, useGetFiltersQuery, useGetSearchQuery } from 'store/requests';
+import { useGetDataQuery } from 'store/requests';
 
 import { countriesConfig, genresConfig, ratingsConfig, yearsConfig } from './const';
 
@@ -40,41 +40,19 @@ const Main = () => {
     dispatch({ payload: debouncedSearchTerm, type: 'search' });
   }, [debouncedSearchTerm]);
 
-  const isFilter = useMemo(
-    () => !!genres || !!countries || !!years || !!ratings,
-    [genres, countries, years, ratings],
-  );
-
-  const { data } = useGetDataQuery({ limit: !debouncedSearchTerm && showMore, page });
-
-  const { data: searchData } = useGetSearchQuery(
-    { limit: debouncedSearchTerm && showMore, value: debouncedSearchTerm },
-    { skip: !debouncedSearchTerm },
-  );
-
-  const { data: filterData } = useGetFiltersQuery(
-    {
-      country: countries === 'null' ? JSON.parse(countries) : countries,
-      genres: genres === 'null' ? JSON.parse(genres) : genres,
-      ratings: ratings === 'null' ? JSON.parse(ratings) : ratings,
-      year: years === 'null' ? JSON.parse(years) : years,
+  const { data } = useGetDataQuery({
+    params: {
+      limit: !debouncedSearchTerm && showMore,
+      page,
+      ...(countries
+        ? { 'countries.name': countries === 'null' ? JSON.parse(countries) : countries }
+        : null),
+      ...(genres ? { 'genres.name': genres === 'null' ? JSON.parse(genres) : genres } : null),
+      ...(ratings ? { 'rating.kp': ratings === 'null' ? JSON.parse(ratings) : ratings } : null),
+      ...(years ? { year: years === 'null' ? JSON.parse(years) : years } : null),
     },
-    { skip: !isFilter },
-  );
-
-  const filteredData = useMemo(() => {
-    if (searchData) {
-      return searchData.docs;
-    }
-    if (filterData) {
-      return filterData.docs;
-    }
-
-    // return helpData.docs;
-
-    return data?.docs;
-  }, [data, searchData, filterData]);
-  // }, []);
+    search: { query: debouncedSearchTerm || null },
+  });
 
   const handleButton = useCallback(() => {
     if (showMore < 250) {
@@ -89,13 +67,20 @@ const Main = () => {
   const handleSearchChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
-      setGenres('');
-      setCountries('');
-      setYears('');
-      setRatings('');
 
       if (value) {
-        setSearchParams({ search: value }, { replace: true });
+        setGenres('');
+        setCountries('');
+        setYears('');
+        setRatings('');
+
+        setSearchParams((prev) => {
+          const newParams = new URLSearchParams(prev);
+          newParams.set('search', value);
+          const keysToDelete = ['Жанр', 'Страна', 'Год', 'Рейтинг'];
+          keysToDelete.forEach((key) => newParams.delete(key));
+          return newParams;
+        });
       } else {
         setSearchParams((prev) => {
           const newParams = new URLSearchParams(prev);
@@ -107,22 +92,45 @@ const Main = () => {
     [setSearchParams],
   );
 
-  const handlePopupClick = useCallback((e) => {
+  const handlePopupClick = useCallback((e: any) => {
     const text = e.target.textContent;
-    setSearchParams({ search: text }, { replace: true });
+
+    setGenres('');
+    setCountries('');
+    setYears('');
+    setRatings('');
+
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      newParams.set('search', text);
+      const keysToDelete = ['Жанр', 'Страна', 'Год', 'Рейтинг'];
+      keysToDelete.forEach((key) => newParams.delete(key));
+      return newParams;
+    });
   }, []);
 
-  const location = useLocation();
-
-  useEffect(() => {
-    if (location.pathname === '/') {
-      setSearchParams((prev) => {
-        const newParams = new URLSearchParams(prev);
+  const handleSelectChange = useCallback(
+    ({ label, value }: { label: string; value: string }) => {
+      setSearchParams((prevParams) => {
+        const newParams = new URLSearchParams(prevParams);
+        newParams.set(label, value);
         newParams.delete('search');
         return newParams;
       });
-    }
-  }, []);
+
+      switch (label) {
+        case 'Жанр':
+          return setGenres(value);
+        case 'Год':
+          return setYears(value);
+        case 'Страна':
+          return setCountries(value);
+        default:
+          return setRatings(value);
+      }
+    },
+    [setSearchParams],
+  );
 
   return (
     <Layout.Content className={styles.content}>
@@ -137,31 +145,36 @@ const Main = () => {
           <Select
             label="Жанр"
             options={genresConfig}
-            onChange={setGenres}
+            onChange={handleSelectChange}
             defaultValue={!!genres}
           />
           <Select
             label="Страна"
             options={countriesConfig}
-            onChange={setCountries}
+            onChange={handleSelectChange}
             defaultValue={!!countries}
           />
-          <Select label="Год" options={yearsConfig} onChange={setYears} defaultValue={!!years} />
+          <Select
+            label="Год"
+            options={yearsConfig}
+            onChange={handleSelectChange}
+            defaultValue={!!years}
+          />
           <Select
             label="Рейтинг Кинопоиска"
             options={ratingsConfig}
-            onChange={setRatings}
+            onChange={handleSelectChange}
             defaultValue={!!ratings}
           />
         </div>
       </div>
       <div>
-        <span>Найдено {filteredData?.length} результатов,</span>
+        <span>Найдено {data?.docs?.length} результатов,</span>
         <span> Страница {page}</span>
       </div>
-      {filteredData?.length ? (
+      {data?.docs?.length ? (
         <div className={styles.virtualList}>
-          <List data={filteredData} itemKey={(item) => item.id} height={830} itemHeight={120}>
+          <List data={data?.docs} itemKey={(item) => item.id} height={830} itemHeight={120}>
             {(item: MapItem) => (
               <Cards key={item.id} name={item.name} poster={item.poster} id={item.id} />
             )}

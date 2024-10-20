@@ -13,7 +13,7 @@ type SearchProps = {
 };
 
 const Search = ({ onChange, onPopupClick, value, option }: SearchProps) => {
-  const [closePopup, setClosePopup] = useState(false);
+  const [closePopup, setClosePopup] = useState(true);
 
   const filteredOptions = useMemo(
     () => option.filter((i) => i.includes(value)).sort(),
@@ -25,8 +25,12 @@ const Search = ({ onChange, onPopupClick, value, option }: SearchProps) => {
     [value, filteredOptions, closePopup],
   );
 
-  const showPopup = useMemo(
-    () => (
+  const showPopup = useMemo(() => {
+    if (filteredOptions.length < 1) {
+      return '';
+    }
+
+    return (
       <div className={styles.popup}>
         <ul>
           {filteredOptions?.slice(0, 10).map((text: string) => (
@@ -42,9 +46,8 @@ const Search = ({ onChange, onPopupClick, value, option }: SearchProps) => {
           ))}
         </ul>
       </div>
-    ),
-    [onPopupClick, filteredOptions],
-  );
+    );
+  }, [onPopupClick, filteredOptions]);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -68,7 +71,12 @@ const Search = ({ onChange, onPopupClick, value, option }: SearchProps) => {
         type="text"
         onChange={onChange}
         value={value}
-        onFocus={() => setClosePopup(false)}
+        onFocus={() =>
+          (filteredOptions.includes(value) ||
+            filteredOptions.length === 0 ||
+            filteredOptions.length > 0) &&
+          setClosePopup(false)
+        }
       />
       <button>
         <img src={searchImg} alt="значек поиска" />
