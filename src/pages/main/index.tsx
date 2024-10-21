@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useReducer, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { Layout } from 'antd';
 import List from 'rc-virtual-list';
 
@@ -16,7 +16,6 @@ import { countriesConfig, genresConfig, ratingsConfig, yearsConfig } from './con
 import { initialState, reducer } from 'reducer';
 
 import styles from './styles.module.scss';
-// import { helpData } from '../../consts/data';
 
 type MapItem = {
   name: string;
@@ -37,6 +36,23 @@ const Main = () => {
   const debouncedSearchTerm = useDebounce(searchParams.get('search') || '', 750);
 
   useEffect(() => {
+    searchParams.forEach((v, k) => {
+      switch (k) {
+        case 'Жанр':
+          return setGenres(v);
+        case 'Год':
+          return setYears(v);
+        case 'Страна':
+          return setCountries(v);
+        case 'Рейтинг Кинопоиска':
+          return setRatings(v);
+        default:
+          return;
+      }
+    });
+  }, [searchParams]);
+
+  useEffect(() => {
     dispatch({ payload: debouncedSearchTerm, type: 'search' });
   }, [debouncedSearchTerm]);
 
@@ -44,12 +60,10 @@ const Main = () => {
     params: {
       limit: !debouncedSearchTerm && showMore,
       page,
-      ...(countries
-        ? { 'countries.name': countries === 'null' ? JSON.parse(countries) : countries }
-        : null),
-      ...(genres ? { 'genres.name': genres === 'null' ? JSON.parse(genres) : genres } : null),
-      ...(ratings ? { 'rating.kp': ratings === 'null' ? JSON.parse(ratings) : ratings } : null),
-      ...(years ? { year: years === 'null' ? JSON.parse(years) : years } : null),
+      ...(countries !== 'null' || '' ? { 'countries.name': countries } : null),
+      ...(genres !== 'null' || '' ? { genres } : null),
+      ...(ratings !== 'null' || '' ? { 'rating.kp': ratings } : null),
+      ...(years !== 'null' || '' ? { year: years } : null),
     },
     search: { query: debouncedSearchTerm || null },
   });
@@ -77,7 +91,7 @@ const Main = () => {
         setSearchParams((prev) => {
           const newParams = new URLSearchParams(prev);
           newParams.set('search', value);
-          const keysToDelete = ['Жанр', 'Страна', 'Год', 'Рейтинг'];
+          const keysToDelete = ['Жанр', 'Страна', 'Год', 'Рейтинг Кинопоиска'];
           keysToDelete.forEach((key) => newParams.delete(key));
           return newParams;
         });
@@ -103,7 +117,7 @@ const Main = () => {
     setSearchParams((prev) => {
       const newParams = new URLSearchParams(prev);
       newParams.set('search', text);
-      const keysToDelete = ['Жанр', 'Страна', 'Год', 'Рейтинг'];
+      const keysToDelete = ['Жанр', 'Страна', 'Год', 'Рейтинг Кинопоиска'];
       keysToDelete.forEach((key) => newParams.delete(key));
       return newParams;
     });
@@ -125,8 +139,10 @@ const Main = () => {
           return setYears(value);
         case 'Страна':
           return setCountries(value);
-        default:
+        case 'Рейтинг Кинопоиска':
           return setRatings(value);
+        default:
+          return;
       }
     },
     [setSearchParams],
@@ -138,7 +154,7 @@ const Main = () => {
         <Search
           onChange={handleSearchChange}
           value={searchParams.get('search') || ''}
-          option={Array.from(state.search)}
+          option={Array.from(state?.search || '')}
           onPopupClick={handlePopupClick}
         />
         <div className={styles.filters}>
@@ -147,24 +163,28 @@ const Main = () => {
             options={genresConfig}
             onChange={handleSelectChange}
             defaultValue={!!genres}
+            valueUrl={genres}
           />
           <Select
             label="Страна"
             options={countriesConfig}
             onChange={handleSelectChange}
             defaultValue={!!countries}
+            valueUrl={countries}
           />
           <Select
             label="Год"
             options={yearsConfig}
             onChange={handleSelectChange}
             defaultValue={!!years}
+            valueUrl={years}
           />
           <Select
             label="Рейтинг Кинопоиска"
             options={ratingsConfig}
             onChange={handleSelectChange}
             defaultValue={!!ratings}
+            valueUrl={ratings}
           />
         </div>
       </div>

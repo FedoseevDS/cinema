@@ -16,7 +16,7 @@ const Search = ({ onChange, onPopupClick, value, option }: SearchProps) => {
   const [closePopup, setClosePopup] = useState(true);
 
   const filteredOptions = useMemo(
-    () => option.filter((i) => i.includes(value)).sort(),
+    () => option?.filter((i) => i.includes(value)).sort(),
     [option, value],
   );
 
