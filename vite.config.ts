@@ -26,6 +26,7 @@ export default defineConfig({
       pages: resolve(__dirname, './src/pages'),
       reducer: resolve(__dirname, './src/reducer'),
       store: resolve(__dirname, './src/store'),
+      styles: resolve(__dirname, './src/styles')
     },
   },
 });

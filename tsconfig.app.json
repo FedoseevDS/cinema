@@ -15,6 +15,7 @@
       "pages/*": ["./src/pages/*"],
       "reducer/*": ["./src/reducer/*"],
       "store/*": ["./src/store/*"],
+      "styles/*": ["./src/styles/*"]
     },
 
     /* Bundler mode */

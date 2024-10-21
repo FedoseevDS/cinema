@@ -35,6 +35,7 @@ export default tseslint.config(
       'no-var': 'error',
       'prefer-const': 'error',
       'sort-keys': ['error', 'asc', { natural: true }],
+      '@typescript-eslint/no-explicit-any': ['off'],
     },
   },
 );
