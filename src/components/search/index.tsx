@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import searchImg from 'assets/search.png';
@@ -7,7 +8,6 @@ import styles from './styles.module.scss';
 type SearchProps = {
   value: string;
   option: string[];
-  // eslint-disable-next-line no-unused-vars
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onPopupClick: (e: any) => any;
 };

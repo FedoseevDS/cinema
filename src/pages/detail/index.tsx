@@ -1,4 +1,3 @@
-import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import emptyImg from 'assets/empty.png';
@@ -7,7 +6,7 @@ import { useGetItemQuery } from 'store/requests';
 
 import styles from './styles.module.scss';
 
-const Detail: React.FC = () => {
+const Detail = () => {
   const { id } = useParams();
 
   const { data = [], isLoading } = useGetItemQuery({ id });
