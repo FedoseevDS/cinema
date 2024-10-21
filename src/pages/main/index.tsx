@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useReducer, useState } from 'react';
-import { useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { Layout } from 'antd';
 import List from 'rc-virtual-list';
 
@@ -31,6 +31,9 @@ const Main = () => {
   const [countries, setCountries] = useState('');
   const [years, setYears] = useState('');
   const [ratings, setRatings] = useState('');
+  const [containerHeight, setContainerHeight] = useState(0);
+  const [windowDimensions, setWindowDimensions] = useState(window.innerWidth);
+
   const [searchParams, setSearchParams] = useSearchParams();
 
   const debouncedSearchTerm = useDebounce(searchParams.get('search') || '', 750);
@@ -60,10 +63,10 @@ const Main = () => {
     params: {
       limit: !debouncedSearchTerm && showMore,
       page,
-      ...(countries !== 'null' || '' ? { 'countries.name': countries } : null),
-      ...(genres !== 'null' || '' ? { genres } : null),
-      ...(ratings !== 'null' || '' ? { 'rating.kp': ratings } : null),
-      ...(years !== 'null' || '' ? { year: years } : null),
+      ...(countries && countries !== 'null' ? { 'countries.name': countries } : null),
+      ...(genres && genres !== 'null' ? { 'genres.name': genres } : null),
+      ...(ratings && ratings !== 'null' ? { 'rating.kp': ratings } : null),
+      ...(years && years !== 'null' ? { year: years } : null),
     },
     search: { query: debouncedSearchTerm || null },
   });
@@ -106,22 +109,25 @@ const Main = () => {
     [setSearchParams],
   );
 
-  const handlePopupClick = useCallback((e: any) => {
-    const text = e.target.textContent;
+  const handlePopupClick = useCallback(
+    (e: any) => {
+      const text = e.target.textContent;
 
-    setGenres('');
-    setCountries('');
-    setYears('');
-    setRatings('');
+      setGenres('');
+      setCountries('');
+      setYears('');
+      setRatings('');
 
-    setSearchParams((prev) => {
-      const newParams = new URLSearchParams(prev);
-      newParams.set('search', text);
-      const keysToDelete = ['Жанр', 'Страна', 'Год', 'Рейтинг Кинопоиска'];
-      keysToDelete.forEach((key) => newParams.delete(key));
-      return newParams;
-    });
-  }, []);
+      setSearchParams((prev) => {
+        const newParams = new URLSearchParams(prev);
+        newParams.set('search', text);
+        const keysToDelete = ['Жанр', 'Страна', 'Год', 'Рейтинг Кинопоиска'];
+        keysToDelete.forEach((key) => newParams.delete(key));
+        return newParams;
+      });
+    },
+    [setSearchParams],
+  );
 
   const handleSelectChange = useCallback(
     ({ label, value }: { label: string; value: string }) => {
@@ -148,6 +154,28 @@ const Main = () => {
     [setSearchParams],
   );
 
+  useEffect(() => {
+    function handleResize() {
+      setWindowDimensions(window.innerWidth);
+    }
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (windowDimensions > 1340) {
+      return setContainerHeight(3000);
+    }
+    if (windowDimensions < 1329 && windowDimensions > 1012) {
+      return setContainerHeight(2400);
+    }
+    if (windowDimensions < 1011 && windowDimensions > 695) {
+      return setContainerHeight(1600);
+    } else {
+      return setContainerHeight(600);
+    }
+  }, [windowDimensions]);
+
   return (
     <Layout.Content className={styles.content}>
       <div className={styles.controlPanel}>
@@ -162,28 +190,28 @@ const Main = () => {
             label="Жанр"
             options={genresConfig}
             onChange={handleSelectChange}
-            defaultValue={!!genres}
+            defaultValue={genres}
             valueUrl={genres}
           />
           <Select
             label="Страна"
             options={countriesConfig}
             onChange={handleSelectChange}
-            defaultValue={!!countries}
+            defaultValue={countries}
             valueUrl={countries}
           />
           <Select
             label="Год"
             options={yearsConfig}
             onChange={handleSelectChange}
-            defaultValue={!!years}
+            defaultValue={years}
             valueUrl={years}
           />
           <Select
             label="Рейтинг Кинопоиска"
             options={ratingsConfig}
             onChange={handleSelectChange}
-            defaultValue={!!ratings}
+            defaultValue={ratings}
             valueUrl={ratings}
           />
         </div>
@@ -194,7 +222,12 @@ const Main = () => {
       </div>
       {data?.docs?.length ? (
         <div className={styles.virtualList}>
-          <List data={data?.docs} itemKey={(item) => item.id} height={830} itemHeight={120}>
+          <List
+            data={data?.docs}
+            itemKey={(item) => item.id}
+            height={containerHeight}
+            itemHeight={120}
+          >
             {(item: MapItem) => (
               <Cards key={item.id} name={item.name} poster={item.poster} id={item.id} />
             )}

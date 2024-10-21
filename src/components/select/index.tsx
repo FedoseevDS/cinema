@@ -5,7 +5,7 @@ import styles from './styles.module.scss';
 type SelectProps = {
   label: string;
   options: { name: string; value: string }[];
-  defaultValue: boolean;
+  defaultValue: string;
   valueUrl: string;
   onChange: (e: any) => any;
 };
@@ -17,10 +17,10 @@ const Select = ({ defaultValue, label, options, valueUrl, onChange }: SelectProp
       <div>
         <select
           onChange={({ target }) => onChange({ label, value: target.value })}
-          value={valueUrl}
+          value={valueUrl || defaultValue}
         >
-          {options?.map(({ name, value }, index) => (
-            <option key={name + value} value={value} selected={!defaultValue && index === 0}>
+          {options?.map(({ name, value }) => (
+            <option key={name + value} value={value}>
               {name}
             </option>
           ))}

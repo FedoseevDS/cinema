@@ -48,6 +48,10 @@
   width: 100%;
   padding: 0 24px;
 
+  div[class~='rc-virtual-list-holder'] {
+    max-height: 900px;
+  }
+
   div[class~='rc-virtual-list-holder-inner'] {    
         display: grid !important;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
