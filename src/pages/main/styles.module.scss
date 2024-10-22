@@ -1,83 +1,11 @@
+@import "styles/colors.scss";
+
 .content {
-  background: #ffffff;
+  background: $white;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
   padding-top: 50px;
   width: 100%;
-}
-
-.controlPanel {
-  box-sizing: border-box;
-  max-width: 1320px;
-  min-width: 500px;
-  width: 100%;
-  padding: 33px 28px;
-  box-shadow: 0px 12px 24px 0px #272D4D33;
-  margin: 0 auto;
-}
-
-.filters {
-  margin-top: 10px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 10px 40px;
-}
-
-.showMore {
-  width: 156px;
-  height: 44px;
-  border-radius: 4px;
-  padding: 0 20px;
-  background: #a0cd9e;
-  box-shadow: 0px 12px 24px 0px #272D4D33;
-  box-shadow: 0px 1px 2px 0px #1E1E2033;
-  margin-bottom: 50px;
-  border: none;
-
-  &:hover {
-    cursor: pointer;
-    opacity: 0.7;
-  }
-}
-
-.virtualList {
-  max-width: 1368px;
-  width: 100%;
-  padding: 0 24px;
-
-  div[class~='rc-virtual-list-holder-inner'] {    
-        display: grid !important;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 20px;
-        justify-items: center;
-      }
-    
-      div[class~='rc-virtual-list-holder'] {
-        & > div {
-          max-width: 1320px;
-        }
-      }
-}
-
-@media screen and (max-width: 900px) {
-  .filters {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  }
-}
-
-@media screen and (max-width: 560px) {
-  .controlPanel {
-    width: 500px;
-    padding: 33px 8%;
-    margin: 0 auto;
-    min-width: 0;
-  }
-
-  .virtualList {
-    width: 420px;
-    margin: 0 auto;
-    padding: 0 8%;
-  }
 }

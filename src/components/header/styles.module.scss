@@ -1,3 +1,5 @@
+@import "styles/colors.scss";
+
 .wrapper {
   box-sizing: border-box;
   width: 100%;
@@ -10,7 +12,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0px 4px 4px 0px #00000040;
+  box-shadow: $box-shadow2;
   padding: 0 8%;
   margin-bottom: 100px;
 
@@ -21,7 +23,7 @@
     font-weight: 600;
 
     & > span:last-child {
-      color: #a0cd9e;
+      color: $green;
     }
   }
 }
@@ -48,13 +50,13 @@
   & > span {
     font-size: 46px;
     font-weight: 400;
-    color: #3A4F39;
+    color: $green2;
   }
 
   & p {
     font-size: 16px;
     font-weight: 500;
-    color: #2D2E2E;
+    color: $black2;
   }
 }
 

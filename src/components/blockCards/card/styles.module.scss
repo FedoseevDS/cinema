@@ -1,11 +1,12 @@
+@import "styles/colors.scss";
+
 .wrapper {
   box-sizing: border-box;
   max-width: 315px;
   width: 100%;
   height: 400px;
   overflow: hidden;
-  box-shadow: 0px 12px 24px 0px #272D4D33;
-  box-shadow: 0px 1px 2px 0px #1E1E2033;
+  box-shadow: $box-shadow;
 }
 
 .title {
@@ -13,12 +14,12 @@
   padding: 15px 18px;
   display: flex;
   align-items: center;
-  background: #eff6f3;
+  background: $grey;
 
   & > span {
     font-size: 24px;
     font-weight: 700;
-    color:#3a4f39;
+    color:$green2;
   }
 }
 

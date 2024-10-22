@@ -1,8 +1,10 @@
+@import "styles/colors.scss";
+
 .wrapper {
   width: 100%;
   display: flex;
   justify-content: center;
-  background: #ffffff;
+  background: $white;
   min-height: 716px;
   padding: 50px 15.63px;
 
@@ -15,7 +17,7 @@
     max-width: 1200px;
     width: 100%;
     min-height: 616px;
-    box-shadow: 0px 12px 24px 0px #272D4D33;
+    box-shadow: $box-shadow;
   }
 }
 
@@ -41,13 +43,13 @@
   & > span {
     font-size: 14px;
     font-weight: 400;
-    color: #333333;
+    color: $black;
   }
   
   & > span:first-child {
     font-size: 24px;
     font-weight: 700;
-    color: #3a4f39;
+    color: $green2;
   }
 }
 

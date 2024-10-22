@@ -67,3 +67,10 @@ export const ratingsConfig = [
   { name: '8-9', value: '8-9' },
   { name: '9-10', value: '9-10' },
 ];
+
+export const configSelect = [
+  { label: 'Жанр', options: genresConfig },
+  { label: 'Страна', options: countriesConfig },
+  { label: 'Год', options: yearsConfig },
+  { label: 'Рейтинг Кинопоиска', options: ratingsConfig },
+];
