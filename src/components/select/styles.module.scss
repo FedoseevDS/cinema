@@ -3,7 +3,7 @@
 .wrapper {
   display: flex;
   gap: 10px;
-  max-width: 617px;
+  // max-width: 617px;
   width: 100%;
   
   & > label {
@@ -65,7 +65,7 @@
     flex-wrap: wrap;
 
     & > div {
-      min-width: 424px;
+      width: 100%;
     }
   }
 }
