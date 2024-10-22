@@ -1,0 +1,48 @@
+@import "styles/colors.scss";
+
+.virtualList {
+  max-width: 1368px;
+  width: 100%;
+  padding: 0 24px;
+
+  div[class~='rc-virtual-list-holder'] {
+    max-height: 900px;
+  }
+
+  div[class~='rc-virtual-list-holder-inner'] {    
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    justify-items: center;
+  }
+    
+  div[class~='rc-virtual-list-holder'] {
+    & > div {
+      max-width: 1320px;
+    }
+  }
+}
+
+.showMore {
+  width: 156px;
+  height: 44px;
+  border-radius: 4px;
+  padding: 0 20px;
+  background: $green;
+  box-shadow: $box-shadow;
+  margin-bottom: 50px;
+  border: none;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.7;
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .virtualList {
+    width: 420px;
+    margin: 0 auto;
+    padding: 0 8%;
+  }
+}

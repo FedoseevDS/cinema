@@ -11,7 +11,7 @@ type CardsProps = {
   id: number;
 };
 
-const Cards = forwardRef<HTMLAnchorElement, CardsProps>(({ name, poster, id }, ref) => (
+const Card = forwardRef<HTMLAnchorElement, CardsProps>(({ name, poster, id }, ref) => (
   <Link to={`/${id.toString()}`} className={styles.wrapper} ref={ref}>
     <div className={styles.title}>
       <span>{name || 'Нет данных'}</span>
@@ -22,4 +22,4 @@ const Cards = forwardRef<HTMLAnchorElement, CardsProps>(({ name, poster, id }, r
   </Link>
 ));
 
-export default Cards;
+export default Card;

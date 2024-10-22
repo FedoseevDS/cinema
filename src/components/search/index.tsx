@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import searchImg from 'assets/search.png';
 
@@ -8,11 +7,10 @@ import styles from './styles.module.scss';
 type SearchProps = {
   value: string;
   option: string[];
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onPopupClick: (e: any) => any;
+  onChange: any;
 };
 
-const Search = ({ onChange, onPopupClick, value, option }: SearchProps) => {
+const Search = ({ onChange, value, option }: SearchProps) => {
   const [closePopup, setClosePopup] = useState(true);
 
   const filteredOptions = useMemo(
@@ -37,7 +35,7 @@ const Search = ({ onChange, onPopupClick, value, option }: SearchProps) => {
             <li
               key={text}
               onClick={(e) => {
-                onPopupClick(e);
+                onChange(e);
                 setClosePopup(true);
               }}
             >
@@ -47,7 +45,7 @@ const Search = ({ onChange, onPopupClick, value, option }: SearchProps) => {
         </ul>
       </div>
     );
-  }, [onPopupClick, filteredOptions]);
+  }, [onChange, filteredOptions]);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 

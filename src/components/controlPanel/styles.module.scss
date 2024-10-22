@@ -1,0 +1,33 @@
+@import "styles/colors.scss";
+
+.controlPanel {
+  box-sizing: border-box;
+  max-width: 1320px;
+  min-width: 500px;
+  width: 100%;
+  padding: 33px 28px;
+  box-shadow: $box-shadow;
+  margin: 0 auto;
+}
+
+.filters {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 10px 40px;
+}
+
+@media screen and (max-width: 900px) {
+  .filters {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .controlPanel {
+    width: 500px;
+    padding: 33px 8%;
+    margin: 0 auto;
+    min-width: 0;
+  }
+}
